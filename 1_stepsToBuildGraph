@@ -1,0 +1,16 @@
+Steps to Build a Graph in LangGraph for LLMs
+Define the State
+
+The "state" represents the data that flows through the graph and gets updated as it moves between nodes.
+To ensure consistency and validate the data, it's recommended to define the state using either TypeDict or Pydantic BaseModel.
+This helps maintain a clear structure and avoid errors when working with the data.
+Create Functions as Nodes
+
+In LangGraph, functions serve as the nodes of the graph.
+Each node has access to the current state and is responsible for performing a specific task.
+The function (node) takes the state as input, modifies it as needed, and returns the updated state.
+Set Up the Graph Structure
+
+A graph in LangGraph is created by connecting nodes with edges.
+The edges define the flow of data between nodes and establish the execution path.
+You’ll define a start node (START) and an end node (END) to create a clear workflow from beginning to completion.
