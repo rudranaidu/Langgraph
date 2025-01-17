@@ -14,3 +14,4 @@ Set Up the Graph Structure
 A graph in LangGraph is created by connecting nodes with edges.
 The edges define the flow of data between nodes and establish the execution path.
 You’ll define a start node (START) and an end node (END) to create a clear workflow from beginning to completion.
+They control how the dataflow from one node to another node and determine the order in which nodes are executed.
