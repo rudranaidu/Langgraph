@@ -18,6 +18,12 @@ graph_builder.add_conditional_edges("greetuser", checksubscripiton)
 
 graph_builder.set_finish_point("sayGoodBye")
 
+Graphs are two types 1) Stategraph 2) MessageGraph
+StagteGraph is initialized with userdiefined state object Ex: graph_builder = StateGraph(HelloWorlsUser)
+MessageGraphs are mostly used for chatbots
+graph_builder = StateGraph(MessageGraph)
+
+
 from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
 
