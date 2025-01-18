@@ -19,7 +19,8 @@ Output Schema: The chatbot function responds with an answer. The output schema m
 
 The data type (text).
 Example: "The weather is sunny."
-In LangGraph, you typically define these schemas using tools like TypedDict or Pydantic BaseModel, which help ensure the data matches the expected structure before the function processes it.
+In LangGraph, you typically define these schemas using tools like TypedDict or Pydantic BaseModel, 
+which help ensure the data matches the expected structure before the function processes it.
 
 
 from langgraph import Graph, Node
