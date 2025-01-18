@@ -1,0 +1,68 @@
+In LangGraph, input schemas and output schemas are like templates or blueprints that define the structure of the data that flows into and out of a function (node) in the graph.
+
+Think of it like this:
+
+Input Schema: This is a description of what kind of data a function (node) needs to start its work. For example, 
+if a function needs a user's name and age, the input schema defines that the input should have these two pieces of information.
+
+Output Schema: This is a description of what kind of data the function (node) will give back after it does its work. 
+For example, if the function calculates the user's birth year based on their age, the output schema defines that the result will include the birth year.
+
+Simple Example
+Imagine you're building a chatbot:
+
+Input Schema: The chatbot function needs a user's question. The input schema might specify:
+
+The data type (text).
+Example: "What is the weather today?"
+Output Schema: The chatbot function responds with an answer. The output schema might specify:
+
+The data type (text).
+Example: "The weather is sunny."
+In LangGraph, you typically define these schemas using tools like TypedDict or Pydantic BaseModel, which help ensure the data matches the expected structure before the function processes it.
+
+
+from langgraph import Graph, Node
+from pydantic import BaseModel
+
+# Define the input schema using Pydantic
+class InputSchema(BaseModel):
+    user_name: str  # Input is the user's name
+
+# Define the output schema using Pydantic
+class OutputSchema(BaseModel):
+    greeting: str  # Output is a greeting message
+
+# Define a function to act as a Node in the graph
+def generate_greeting(input_data: InputSchema) -> OutputSchema:
+    """
+    Generates a greeting message based on the user's name.
+    """
+    # Process the input data
+    user_name = input_data.user_name
+    greeting_message = f"Hello, {user_name}! Welcome to LangGraph."
+    
+    # Return the output data
+    return OutputSchema(greeting=greeting_message)
+
+# Set up the LangGraph
+greeting_graph = Graph()
+
+# Add the node to the graph
+greeting_graph.add_node(
+    name="generate_greeting",
+    func=generate_greeting,
+    input_schema=InputSchema,
+    output_schema=OutputSchema,
+)
+
+# Test the graph
+if __name__ == "__main__":
+    # Define the input
+    input_data = {"user_name": "Alice"}
+    
+    # Execute the graph
+    result = greeting_graph.run(start_node="generate_greeting", input_data=input_data)
+    
+    # Print the output
+    print(result)  # Output: {'greeting': 'Hello, Alice! Welcome to LangGraph.'}
