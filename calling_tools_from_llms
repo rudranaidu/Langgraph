@@ -1,0 +1,33 @@
+Defining tool using @tool decarator
+@tool ->It turns python function into callable tools
+
+@tool
+def get_weather(str: location):
+    weatherData = {
+    
+    }
+    return weatherData.get(location, "Weather information is unavailable for this location")
+
+integrating tool with ToolNode
+
+setup ToolNode
+   from langgraph.prebuild import ToolNode
+   tool_node = ToolNode([get_weather])
+
+Now we will update the graph so that our agent call Tool to get the weather information
+
+model=ChatOpenAI(model="gpt-4o-mini",api_key=api_key).bind_tools([get_weather])
+
+def call_llm(state:MessageState):
+
+    messages = state["messages"]
+    response = model.invoke(messages[-1].content)
+    
+    if response.tool_calls:
+       tool_result = tool_node.invoke({"messages":[response]"})
+       tool_messages = tool_result["messages"][-1].content
+       response.content + =f"\n Toolresult:{tool_messages}"
+       return{"messages":[response]}
+       
+
+  
