@@ -11,6 +11,11 @@ ThreadID Support:
 Each thread has isolated memory using the thread_id as part of the key.
 Enables multiple parallel conversations without interference.
 
+Checkpoint: LangGraph saves the state of the conversation at every interaction as a checkpoint.
+Each checkpoint contains the conversation context, including userinput and agent responses.
+
+Thread IDs : Every session is associated with  a thread ID. When the same thread is ID is reused.
+LangGraph restores the conversation context from the last checkpoint associated with thread.
 
 from langgraph import Graph, Node
 from langgraph.memory import MemorySaver
