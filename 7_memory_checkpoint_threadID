@@ -1,15 +1,16 @@
 Short-Term Memory:
+    Stored per thread using unique keys (recent_interaction_{thread_id}).
+    Maintained across multiple interactions in the same thread.
 
-Stored per thread using unique keys (recent_interaction_{thread_id}).
-Maintained across multiple interactions in the same thread.
 Checkpoints:
 
-Allow saving specific memory states using set_checkpoint.
-Can be restored later using get_checkpoint.
+    Allow saving specific memory states using set_checkpoint.
+    Can be restored later using get_checkpoint.
+
 ThreadID Support:
 
-Each thread has isolated memory using the thread_id as part of the key.
-Enables multiple parallel conversations without interference.
+    Each thread has isolated memory using the thread_id as part of the key.
+    Enables multiple parallel conversations without interference.
 
 Checkpoint: LangGraph saves the state of the conversation at every interaction as a checkpoint.
 Each checkpoint contains the conversation context, including userinput and agent responses.
