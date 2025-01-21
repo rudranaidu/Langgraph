@@ -1,0 +1,48 @@
+Using memory to remember the conversational state.
+
+from langgraph import Graph, Node
+from langgraph.memory import MemorySaver
+
+class InputSchema:
+    user_query: str
+
+class OutputSchema:
+    agent_response: str
+
+def ai_node(input_data: InputSchema, memory: MemorySaver) -> OutputSchema:
+    # Check if there's context from memory
+    context = memory.get("recent_interaction", default="")
+    user_query = input_data.user_query
+
+    # AI's response logic
+    if context:
+        agent_response = f"Earlier, you mentioned '{context}'. You now asked: '{user_query}'. Let me help!"
+    else:
+        agent_response = f"You said: '{user_query}'. Let me assist you!"
+
+    # Save the current query to memory for context in the next interaction
+    memory.set("recent_interaction", user_query)
+
+    return OutputSchema(agent_response=agent_response)
+
+graph = Graph()
+memory_saver = MemorySaver()
+
+graph.add_node(
+    "AI_Node",
+    ai_node,
+    input_schema=InputSchema,
+    output_schema=OutputSchema,
+    memory=memory_saver
+)
+
+if __name__ == "__main__":
+    # User input 1
+    user_input_1 = InputSchema(user_query="What is LangGraph?")
+    output_1 = graph.run("AI_Node", user_input_1)
+    print(output_1.agent_response)  # Should use only this query since there's no memory yet.
+
+    # User input 2
+    user_input_2 = InputSchema(user_query="How can I use MemorySaver?")
+    output_2 = graph.run("AI_Node", user_input_2)
+    print(output_2.agent_response)  # Should refer to the earlier interaction stored in memory.
