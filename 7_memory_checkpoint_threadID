@@ -1,0 +1,82 @@
+from langgraph import Graph, Node
+from langgraph.memory import MemorySaver
+
+# Step 1: Define Input and Output Schemas
+class InputSchema:
+    thread_id: str  # Unique identifier for conversation threads
+    user_query: str
+
+class OutputSchema:
+    agent_response: str
+
+# Step 2: Define the AI Node
+def ai_node(input_data: InputSchema, memory: MemorySaver) -> OutputSchema:
+    thread_id = input_data.thread_id
+    user_query = input_data.user_query
+
+    # Step 2.1: Retrieve short-term memory for the thread
+    context_key = f"recent_interaction_{thread_id}"
+    context = memory.get(context_key, default="")
+
+    # Step 2.2: Generate a response based on memory or query
+    if context:
+        agent_response = (
+            f"In this thread, you previously mentioned: '{context}'. "
+            f"Now, you asked: '{user_query}'. Here's my response!"
+        )
+    else:
+        agent_response = f"This is a new thread. You asked: '{user_query}'. Let me assist!"
+
+    # Step 2.3: Save the current interaction in memory
+    memory.set(context_key, user_query)
+
+    # Step 2.4: Optional - Checkpoint for restoring memory
+    checkpoint_key = f"checkpoint_{thread_id}"
+    memory.set_checkpoint(checkpoint_key, context_key)
+
+    return OutputSchema(agent_response=agent_response)
+
+# Step 3: Define a function to restore checkpoints
+def restore_checkpoint(thread_id: str, memory: MemorySaver):
+    checkpoint_key = f"checkpoint_{thread_id}"
+    context_key = f"recent_interaction_{thread_id}"
+
+    # Restore memory to the last checkpoint
+    restored_context = memory.get_checkpoint(checkpoint_key, default="")
+    memory.set(context_key, restored_context)
+
+# Step 4: Initialize LangGraph and MemorySaver
+graph = Graph()
+memory_saver = MemorySaver()
+
+# Add AI Node to the graph
+graph.add_node(
+    "AI_Node",
+    ai_node,
+    input_schema=InputSchema,
+    output_schema=OutputSchema,
+    memory=memory_saver
+)
+
+# Step 5: Run the AI Agent
+if __name__ == "__main__":
+    # User input in thread 1
+    user_input_1 = InputSchema(thread_id="thread_1", user_query="What is LangGraph?")
+    output_1 = graph.run("AI_Node", user_input_1)
+    print(output_1.agent_response)
+
+    # User input in thread 2
+    user_input_2 = InputSchema(thread_id="thread_2", user_query="Explain MemorySaver.")
+    output_2 = graph.run("AI_Node", user_input_2)
+    print(output_2.agent_response)
+
+    # Another input in thread 1
+    user_input_3 = InputSchema(thread_id="thread_1", user_query="How do checkpoints work?")
+    output_3 = graph.run("AI_Node", user_input_3)
+    print(output_3.agent_response)
+
+    # Restore checkpoint in thread 1 and run again
+    restore_checkpoint("thread_1", memory_saver)
+    user_input_4 = InputSchema(thread_id="thread_1", user_query="What happened to my memory?")
+    output_4 = graph.run("AI_Node", user_input_4)
+    print(output_4.agent_response)
