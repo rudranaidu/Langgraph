@@ -1,0 +1,84 @@
+1. MemorySaver
+
+What It Does:
+  MemorySaver saves all interactions persistently to a file or a database.
+  This means your data will stay even if you restart the system.
+  Best used when you want long-term memory across sessions.
+
+Analogy:
+Think of MemorySaver as a journal where you write down everything to refer to later, even if the app is closed.
+
+from langgraph.memory import MemorySaver
+
+# Create a MemorySaver instance
+memory_saver = MemorySaver(storage_file="memory.db")  # Saves to a database file
+
+# Example usage: Save and retrieve memory
+memory_saver.save("thread1", {"message": "What is LangGraph?"})
+print(memory_saver.retrieve("thread1"))
+
+How It Works:
+
+save(): Adds data to memory.
+retrieve(): Gets data from the stored file.
+
+2. Checkpoints
+What It Does:
+
+Checkpoints allow you to save a snapshot of the memory at a specific time.
+You can restore memory to this checkpoint later.
+Best for creating "restore points" during a single session.
+Analogy:
+Imagine you’re playing a video game, and you save the game at a critical point. If you fail, you can reload from that point.
+
+from langgraph.memory import InMemoryStore
+
+# Create an InMemoryStore (supports checkpoints)
+memory = InMemoryStore()
+
+# Add messages to memory
+memory.save("thread1", {"message": "What is LangGraph?"})
+memory.save("thread1", {"message": "Explain checkpoints."})
+
+# Create a checkpoint
+memory.create_checkpoint("thread1", checkpoint_name="start")
+
+# Add more messages
+memory.save("thread1", {"message": "What are MemorySavers?"})
+
+# Restore to the checkpoint
+memory.restore_checkpoint("thread1", checkpoint_name="start")
+
+# Retrieve memory after restore
+print(memory.retrieve("thread1"))  # Only contains messages before the checkpoint
+
+How It Works:
+
+create_checkpoint(): Saves a snapshot of the memory.
+restore_checkpoint(): Restores the memory to the snapshot, discarding changes made after the checkpoint.
+
+3. InMemoryStore
+What It Does:
+
+Stores memory temporarily in RAM (does not persist to disk).
+Memory is lost when the program exits.
+Best for short-term memory or testing.
+Analogy:
+
+Think of InMemoryStore as a whiteboard where you can jot down notes, but everything gets erased when you leave the room.
+
+from langgraph.memory import InMemoryStore
+
+# Create an InMemoryStore instance
+memory = InMemoryStore()
+
+# Save data temporarily
+memory.save("thread1", {"message": "What is LangGraph?"})
+
+# Retrieve the data
+print(memory.retrieve("thread1"))  # Outputs: [{'message': 'What is LangGraph?'}]
+
+How It Works:
+
+save(): Adds data to the in-memory store.
+retrieve(): Gets data, but only if the program is still running.
