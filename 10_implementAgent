@@ -1,0 +1,25 @@
+Implement Agent with following functionalities
+   1) Statemanagment
+   2) short term memroy
+   3) long term memeory across sessions
+
+Basic Agent Behaviour:
+  It should accept and query from user and respond with answer
+  Use LLM GPT models
+  
+StateManagement:
+   Desing workflow with nodes that manages and update the conversational state
+   
+ShortTerm Memory:
+    Implement shortterm memroy using MemorySaver to keep
+    the context of the conversation within session
+    the agent should remember the userinput and context during the session
+    
+Longterm Memory:
+     Use inmemeory Store to store presistant user information
+     
+Checkpoints and Replyas
+      Make sure the agent can replay sessions by using
+      checkpoints and thread identifiers
+      
+
