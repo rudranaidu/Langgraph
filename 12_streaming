@@ -27,3 +27,48 @@ agent = Agent(
 # Simulate an interaction with the agent
 response = agent.process("Explain AI in simple terms")
 print("Final response:", response)
+
+
+Different Streaming modes:
+
+Langgraph supports streaming modes to dynamically process and deliver outputs in real-time or near-real-time as data is generated.
+These modes are especially useful for interactive applications, such as chatbots or real-time data processing systems.
+
+1) Token-Based Streaming -> Chatbots or conversational agents where a real-time, dynamic response is desired.
+
+    from langgraph import Agent
+    
+    my_agent = Agent(streaming=True)
+    response = my_agent.run("Tell me a story about space exploration.")
+    for token in response:
+        print(token, end="")  # Prints the response token by token
+
+2) Line-Based Streaming -> Outputs are processed and streamed line by line.
+    Ex; Logging systems or multi-line outputs (e.g., logs, paragraphs), Applications where output is structured in lines
+   (like generating markdown files or scripts).
+
+    my_agent = Agent(streaming="line")
+    response = my_agent.run("Generate a Python script for a calculator.")
+    for line in response:
+        print(line)  # Prints response line by line
+
+3)  Custom Chunk Streaming
+    Outputs are streamed in custom-sized chunks (e.g., a few tokens or sentences at a time).
+    Applications requiring control over batch size.
+
+    my_agent = Agent(streaming="chunk", chunk_size=50)
+    response = my_agent.run("Write a summary of AI advancements.")
+    for chunk in response:
+        print(chunk)  # Prints the response in 50-token chunks
+
+4) Event-Based Streaming
+    Outputs are streamed based on events or triggers defined by the developer.
+    When to Use:
+    Interactive systems where output depends on external signals.
+    Applications that rely on webhooks or real-time user actions.
+
+    def on_new_chunk(chunk):
+        print(f"Received chunk: {chunk}")
+    
+    my_agent = Agent(streaming="event", on_chunk=on_new_chunk)
+    my_agent.run("Explain the concept of generative AI.")
