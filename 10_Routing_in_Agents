@@ -1,0 +1,81 @@
+Routing in AI agents decides which path or workflow or task needs to be called.
+Langgraph has in built tool_conditioning for conditional routing.
+Conditional_routing is used to decide whether to call a tool or respond directly
+The tools_condition decorator is applied to a condition function. This function determines whether a tool can be triggered based on the input the agent receives.
+
+
+from langgraph import LangGraphAgent
+from langgraph.tools import Tool
+from langgraph.conditions import tools_condition
+
+# Define a calculator tool
+def calculator_tool(input_text):
+    try:
+        result = eval(input_text)
+        return f"The result is {result}"
+    except:
+        return "Invalid mathematical expression."
+
+calculator = Tool(name="Calculator", func=calculator_tool)
+
+# Define a weather tool
+def weather_tool(location):
+    return f"The current weather in {location} is sunny."
+
+weather = Tool(name="Weather", func=weather_tool)
+
+# Define conditions
+@tools_condition(calculator)
+def is_math_query(input_text):
+    # Check if the input contains a math operator
+    return any(op in input_text for op in ["+", "-", "*", "/"])
+
+@tools_condition(weather)
+def is_weather_query(input_text):
+    # Check if the input contains the word "weather"
+    return "weather" in input_text.lower()
+
+# Create the agent
+agent = LangGraphAgent(tools=[calculator, weather])
+
+# Example Queries
+print(agent.run("What is 5 + 3?"))  # Calculator tool is triggered
+print(agent.run("What is the weather in New York?"))  # Weather tool is triggered
+print(agent.run("Tell me about LangGraph."))  # No tool is triggered
+
+
+Key Points in the Code
+Condition Functions (is_math_query, is_weather_query):
+
+These determine when a tool should be used.
+Example: is_math_query checks if the input contains mathematical operators.
+tools_condition Decorator:
+
+Links a condition to a specific tool.
+Ensures the tool is only invoked if the condition is met.
+Tool Execution:
+
+If the condition is true, the agent executes the tool.
+If no condition matches, the agent processes the query without tools.
+
+
+We can also achieve the same functionality using  conditional_routing
+
+Purpose: A conditional_routing is a higher-level mechanism for routing inputs across multiple tools or multiple agents based on custom logic.
+Usage: It allows for more complex decision-making, determining which tool or which agent should handle the input.
+
+Example:
+from langgraph.conditions import conditional_routing
+@conditional_routing([tool1, tool2])
+def route_condition(input_text):
+    if "weather" in input_text:
+        return tool1
+    elif "calculate" in input_text:
+        return tool2
+    return None
+
+
+Summary:
+conditional_routing is a decorator in LangGraph that routes inputs dynamically to specific tools or agents based on custom logic defined in a routing function.
+tools_condition is a decorator used to enable or disable a specific tool based on conditions, deciding whether the tool is eligible to handle an input.
+The key difference is that conditional_routing focuses on choosing one tool/agent from many, while tools_condition determines whether an individual tool is applicable at all.
