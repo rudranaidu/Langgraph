@@ -1,0 +1,29 @@
+In LangGraph, streaming refers to processing data or responses in real-time, instead of waiting for the entire response to be ready. 
+This is useful when the output is large or when you want to show partial results as they are generated.
+
+For example, when generating long responses or handling real-time interactions, streaming lets the user see the response piece by piece,
+making the interaction faster and more responsive.
+
+When to Use Streaming
+
+Real-Time Feedback: For fast and responsive user experiences (e.g., chatbot interactions).
+Large Outputs: For processing or displaying large data sets without waiting for completion.
+Dynamic Context Updates: To update and display context dynamically as the conversation evolves.
+
+from langgraph import Agent, StreamHandler
+
+# Define a custom stream handler to process chunks of responses
+class MyStreamHandler(StreamHandler):
+    def on_chunk(self, chunk):
+        print("Received chunk:", chunk)
+
+# Create an agent with streaming enabled
+agent = Agent(
+    tools=[],  # Add any tools your agent needs
+    memory=None,  # Memory can be added if needed
+    stream_handler=MyStreamHandler()  # Use the custom stream handler
+)
+
+# Simulate an interaction with the agent
+response = agent.process("Explain AI in simple terms")
+print("Final response:", response)
