@@ -358,7 +358,59 @@ app = g.compile()
 ---
 
 # 5. Tool Failure + Fallback
+```
+Question
 
+Call tool → if fails → fallback
+```
+```
+Graph Representation
+🧠 State
+input
+status
+output
+```
+```
+🧠 Nodes
+tool_call
+fallback
+```
+```
+🧠 Entry
+
+tool_call
+```
+```
+🧠 Edges
+
+tool_call → END
+tool_call → fallback → END
+```
+```
+🧠 Conditional
+
+success vs failure
+```
+```
+🧠 Stop
+
+after success/fallback
+```
+```
+🧩 Graph
+tool
+ /   \
+ok   fail
+ |     |
+END fallback
+        |
+       END
+```
+```
+🔥 Explanation
+
+Error handling via conditional routing and fallback node.
+```
 ## Graph
 
 ```
