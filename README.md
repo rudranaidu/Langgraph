@@ -102,6 +102,62 @@ app = g.compile()
 
 # 2. Conditional Routing Agent
 
+```
+Question
+
+Route query:
+
+“Calculate 2+2” → calculator
+“Explain AI” → search
+Graph Representation
+```
+```
+🧠 1. State
+input
+decision
+output
+```
+```
+🧠 2. Nodes
+decide → classify query
+calculate → math
+search → general answer
+```
+🧠 3. Entry Point
+
+Entry: decide
+```
+🧠 4. Edges
+
+decide → calculate → END
+decide → search → END
+```
+```
+🧠 5. Conditional Edges
+
+From decide:
+
+math → calculate
+else → search
+```
+```
+🧠 6. Stop Condition
+
+After tool execution → END
+```
+```
+🧩 Final Graph
+        decide
+       /     \
+  calculate   search
+       \     /
+         END
+```
+ ```        
+🔥 Interview Explanation
+
+Decision node routes execution dynamically using conditional edges.
+```
 ## Graph
 
 ```
