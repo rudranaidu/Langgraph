@@ -754,7 +754,58 @@ app = g.compile()
 ---
 
 # 6. Multi-Tool Chain
+```
+Question
 
+Search news → summarize → if no data → stop
+```
+Graph Representation
+```
+🧠 State
+input
+news
+output
+```
+```
+🧠 Nodes
+search
+summarize
+```
+```
+🧠 Entry
+
+search
+```
+```
+🧠 Edges
+
+search → summarize → END
+```
+```
+🧠 Conditional
+
+if news exists
+```
+```
+🧠 Stop
+
+after summarize or no data
+```
+```
+🧩 Graph
+search
+ /   \
+yes   no
+ |     |
+summ   END
+ |
+END
+```
+```
+🔥 Explanation
+
+Multi-step tool chaining with conditional termination.
+```
 ## Graph
 
 ```
