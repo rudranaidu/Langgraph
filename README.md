@@ -38,33 +38,38 @@ search_docs → generate_answer → END
 ```
 
 Graph Representation
-
+```
  🧠 1. State
     input
     docs
     output
     steps
-
+```
+```
 🧠 2. Nodes
     search_docs → retrieves documents
     generate_answer → generates final answer
-
+```
+```
 🧠 3. Entry Point
 
     Entry: search_docs
-
+```
+```
 🧠 4. Edges
 
     search_docs → generate_answer → END
-
+```
+```
 🧠 5. Conditional Edges
 
     Not required
-
+```
+```
 🧠 6. Stop Condition
 
     After generate_answer → END
-
+```
 ## Code
 
 ```python
