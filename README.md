@@ -36,8 +36,10 @@ State → Nodes → Entry → Edges → Conditional → END
 ```
 search_docs → generate_answer → END
 ```
+
 Graph Representation
-🧠 1. State
+
+ 🧠 1. State
     input
     docs
     output
