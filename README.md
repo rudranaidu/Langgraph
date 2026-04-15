@@ -267,6 +267,54 @@ app = g.compile()
 ---
 
 # 4. Loop + Retry Agent
+```
+Question
+
+Search → evaluate → retry until good answer or max 3 attempts
+```
+
+Graph Representation
+```
+🧠 State
+input
+count
+output
+```
+```
+🧠 Nodes
+search
+evaluate
+```
+```
+🧠 Entry
+
+search
+```
+```
+🧠 Edges
+
+search → evaluate
+```
+```
+🧠 Conditional
+retry → search
+done → END
+```
+```
+🧠 Stop
+
+count limit reached
+```
+```
+🧩 Graph
+search → evaluate
+   ↑        ↓
+   └── retry ──┘
+        |
+       END
+🔥 Explanation
+```
+Loop implemented via conditional edge with retry control.
 
 ## Graph
 
